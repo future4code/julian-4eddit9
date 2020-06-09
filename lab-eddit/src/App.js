@@ -12,6 +12,5 @@ function App() {
     <AppContainer>
       <Routes/>
     </AppContainer>
-  );
 }
 export default App;
