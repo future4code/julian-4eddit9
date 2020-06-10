@@ -43,11 +43,11 @@ export const IconButton = styled.i`
 export const ContentCounter = styled.span`
 
 `;
-export const SendCommentCard = styled.main`
+export const SendCommentCard = styled.form`
     border: 1px solid black;
     margin-top: 16px;
     width: 320px;
-    height: 128px;
+    height: 96px;
     display: grid;
     grid-template-rows: 3fr 0.5fr; 
 `;
@@ -57,7 +57,7 @@ export const CommentInput = styled.textarea`
     overflow: auto;
 `;
 export const SendCommentButton = styled.button`
-
+    
 `;
 export const CommentsPanel = styled.main`
     margin: 16px 0 0 18px;
@@ -66,4 +66,12 @@ export const CommentsPanel = styled.main`
     flex-direction: column;
     overflow-x:none;
     overflow-y:auto;
+`;
+export const CommentCard = styled.main`
+    border: 1px solid black;
+    margin-bottom: 8px;
+    width: 320px;
+    height: 156px;
+    display: grid;
+    grid-template-rows: 0.5fr 3fr 0.5fr; 
 `;
