@@ -1,13 +1,16 @@
 import React from 'react';
-import './App.css';
-import LoginPage from './components/LoginPage';
+import Routes from './routes'
+import styled from 'styled-components';
+
+const AppContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+`;
 
 function App() {
   return (
-    <div>
-      <LoginPage/>
-    </div>
-  );
+    <AppContainer>
+      <Routes/>
+    </AppContainer>
 }
-
 export default App;
