@@ -1,19 +1,8 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
-const LoginContainer = styled.div`
-    text-align: center;
-`
-
-const FormContainer = styled.div`
-    display: grid;
-    grid-column: 1fr 1fr 1fr 1fr;
-    gap: 16px;
-    align-items: center;
-    justify-content: space-around;
-`
+import { LoginContainer, FormContainer } from './styles'
 
 
 function LoginPage() {
@@ -41,7 +30,6 @@ function LoginPage() {
         })
     };
      
-
     // console.log(JSON.parse(localStorage.getItem("userInfos")))
 
     return (
