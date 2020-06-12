@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
-import axios from 'axios';
-import {useHistory} from 'react-router-dom'
+import api from '../../services/api';
+import {useHistory} from 'react-router-dom';
 
 import {
     SignupContainer, SignupForm, 
     SignupInput, SignupButton, SignupTitle,
     InputLabel,
     BackButton
-} from './styles'
+} from './styles';
 
 function SignupPage(){
 
-    const history = useHistory()
+    const history = useHistory();
 
     const [signupInfos, setSignupInfos] = useState({
         email:'',
@@ -28,17 +28,13 @@ function SignupPage(){
         try{
             window.alert('Solicitação realizada! Aguarde a confirmação...');
 
-            const response = await axios .post(
-                `https://us-central1-labenu-apis.cloudfunctions.net/labEddit/signup`,
-                signupInfos
-                );
-            console.log(response)
+            const response = await api.post('signup',signupInfos);
             window.alert(`Usuário(a) '${response.data.user.username}' cadastrado(a) com sucesso!`);
+            setSignupInfos({email:'', password:'', username:'',});
         }catch(e){
             window.alert('Não foi possível realizar o cadastro. Tente novamente mais tarde!')
         };
     };
-
     return(
         <SignupContainer onSubmit={handleSubmit}>
             <SignupTitle>Cadastro</SignupTitle>

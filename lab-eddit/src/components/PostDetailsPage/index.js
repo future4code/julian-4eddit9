@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import api from '../../services/api'
 import {useParams, useHistory} from 'react-router-dom'
 
 
@@ -14,8 +14,6 @@ import {
     TiArrowDownThick, TiArrowDownOutline,
     TiArrowUpOutline, TiArrowUpThick
 } from 'react-icons/ti';
-
-const baseUrl = 'https://us-central1-labenu-apis.cloudfunctions.net/labEddit';
 
 const PostDetailsPage=()=>{
     const {postId} = useParams();
@@ -35,9 +33,8 @@ const PostDetailsPage=()=>{
     const handleSendComment=async(e)=>{
         e.preventDefault();
         try{
-            await axios
-            .post(
-                `${baseUrl}/posts/${postDetails.id}/comment`,
+            await api.post(
+                `posts/${postDetails.id}/comment`,
                 {text: commentText},
                 {headers:{Authorization:userToken}},
             );
@@ -49,9 +46,8 @@ const PostDetailsPage=()=>{
     };
     const handleSendPostVote=async(userDirection)=>{
         try{
-            await axios
-            .put(
-                `${baseUrl}/posts/${postDetails.id}/vote`,
+            await api.put(
+                `posts/${postDetails.id}/vote`,
                 {direction: userDirection},
                 {headers:{Authorization:userToken}},
             );
@@ -76,9 +72,8 @@ const PostDetailsPage=()=>{
             }
         };                   
         try{
-            await axios
-            .put(
-                `${baseUrl}/posts/${postDetails.id}/comment/${commentId}/vote`,
+            await api.put(
+                `posts/${postDetails.id}/comment/${commentId}/vote`,
                 {direction: voteDirection()},
                 {headers:{Authorization:userToken}},
             );
@@ -89,8 +84,7 @@ const PostDetailsPage=()=>{
     };
     useEffect(()=>{
         if(postDetails === null){
-            axios
-            .get(`${baseUrl}/posts/${postId}`, {headers:{Authorization:userToken}},)
+            api.get(`posts/${postId}`, {headers:{Authorization:userToken}},)
             .then(r=> setPostDetails(r.data.post))
             .catch(e=> window.alert('Não foi possível carregar informações deste post!'))
         }
@@ -105,6 +99,8 @@ const PostDetailsPage=()=>{
                     {postDetails !== null ? postDetails.username:''}
                 </ContentTitle>
                 <ContentText>
+                    {postDetails !== null ?postDetails.title:''}
+                    <br/><br/>
                     {postDetails !== null ?postDetails.text:''}
                 </ContentText>
                 <ContentActionBar>

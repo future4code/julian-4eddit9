@@ -1,14 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import {useHistory} from 'react-router-dom'
 import PostCard from './PostCard';
 import axios from 'axios';
+import api from '../../services/api';
 
+import LoginContext from '../../contexts/LoginContex';
 
 import { FeedContainer, FormContainer } from './styles'
 
 
-function FeedPage() {
-    const baseUrl = 'https://us-central1-labenu-apis.cloudfunctions.net/labEddit' 
-    const userToken = JSON.parse(localStorage.getItem("userInfos")).token
+function FeedPage() { 
+    const userToken = JSON.parse(localStorage.getItem("userInfos")).token;
+
+    const history = useHistory();
+
+    const loginContext = useContext(LoginContext);
 
     const [createPost, setCreatePost] = useState({
         text: "",
@@ -25,9 +31,9 @@ function FeedPage() {
     const onClickCreatePost = (event) => {
         event.preventDefault();
         axios
-        .post(`${baseUrl}/posts`, createPost, {
+        .post('posts', createPost, {
             headers:{
-                Authorization: userToken
+                Authorization: loginContext.userInfos.token
             }})
         .then((response) => {
             window.alert("Post criado com sucesso!")
@@ -38,29 +44,19 @@ function FeedPage() {
             })           
         })
         .catch((error) => window.alert("Erro ao criar o post, tente novamente."))
-    }
-
-   
-    const getListsPost = () => {
-        axios
-        .get(`${baseUrl}/posts`, {
-            headers: {
-                Authorization: userToken
-            }})
-        .then((response) => {setGetPost(response.data.posts)})
-        
-        .catch((error) => {window.alert("Não foi possível carregar o feed, tente novamente mais tarde.")})
-    }    
+    };
     useEffect(() => {
         if(getPost === null) {
-            getListsPost()
+            api.get('posts', {headers: {Authorization: loginContext.userInfos.token}})
+            .then(response => setGetPost(response.data.posts))
+            .catch(erro=>window.alert('Não foi possível carregar o feed! :('))
         } 
-    }, [getPost])
-
+    }, [getPost]);
     
     return (
         <FeedContainer>
             <h1>Página de feed</h1>
+            <button onClick={()=> history.replace('/')}>Logoff</button>
             <FormContainer onSubmit={onClickCreatePost}>
                 <input 
                     value={createPost.title} 
@@ -82,11 +78,10 @@ function FeedPage() {
             </FormContainer>
             
             <div>
-                {getPost !== null && getPost.map((post) => {
+                {getPost !== null && getPost !== undefined && getPost.map((post) => {
                     return (
                         <PostCard 
-                            token = {userToken}
-                            baseUrl = {baseUrl}
+                            token = {loginContext.userInfos.token}
                             key = {post.id}
                             commentsCount = {post.commentsCount}
                             createdAt = {post.createdAt}
