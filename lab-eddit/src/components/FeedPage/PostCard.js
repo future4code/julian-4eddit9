@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import api from '../../services/api';
 import {useHistory} from 'react-router-dom';
 
-
 import { PostContainer } from './styles'
-
 
 function PostCard(props) {
     const history = useHistory();
@@ -21,14 +19,12 @@ function PostCard(props) {
                 return 0
             }
         }
-        console.log(voteDirection())
-        axios.put(`${props.baseUrl}/posts/${props.id}/vote`, {"direction": voteDirection()}, {
+        api.put(`posts/${props.id}/vote`, {"direction": voteDirection()}, {
             headers: {
                 Authorization: props.token
             }
         }).then().catch((error) => window.alert("Não foi possível registrar o seu voto."))
-    }
-    
+    };
     return (
         <PostContainer>
             <div>

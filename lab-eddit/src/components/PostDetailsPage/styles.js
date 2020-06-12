@@ -26,7 +26,7 @@ export const ContentText = styled.p`
     border: 1px solid black;
     width: 100%;
     margin: 0;
-    text-align: justify;
+    text-align: letf;
     letter-spacing: 1px;
     overflow: auto;
 `;
