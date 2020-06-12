@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 
 
 import { PostContainer } from './styles'
 
 
 function PostCard(props) {
+    const history = useHistory();
+
     const onClickVote = (event) => {
         const currentVote = props.userVoteDirection
 
@@ -28,7 +31,11 @@ function PostCard(props) {
     
     return (
         <PostContainer>
-            <p>{props.username}</p>
+            <div>
+                <p>{props.username}</p>
+                <button onClick={()=>{history.push(`/post-details/${props.id}`)}}>Ver detalhes</button>
+            </div>
+            
             <p>{props.text}</p>
             <div>
                 <button onClick={onClickVote} id={props.id} name="voteUp">Like</button>

@@ -8,7 +8,7 @@ import { FeedContainer, FormContainer } from './styles'
 
 function FeedPage() {
     const baseUrl = 'https://us-central1-labenu-apis.cloudfunctions.net/labEddit' 
-    const userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNoUEVCeWZEOXBaOHpTYWpkR3lCIiwidXNlcm5hbWUiOiJIZW5kcml4IiwiZW1haWwiOiJoZW5kcml4QGppbW15LmNvbSIsImlhdCI6MTU5MTgyMzM4NH0.ctoXygEyO83nM00mePdwt_q8E7_C1yqHcdrXuGvXT6Y"
+    const userToken = JSON.parse(localStorage.getItem("userInfos")).token
 
     const [createPost, setCreatePost] = useState({
         text: "",
@@ -22,13 +22,21 @@ function FeedPage() {
         setCreatePost({...createPost, [name]: value})
     }
    
-    const onClickCreatePost = () => {
+    const onClickCreatePost = (event) => {
+        event.preventDefault();
         axios
         .post(`${baseUrl}/posts`, createPost, {
             headers:{
                 Authorization: userToken
             }})
-        .then((response) => window.alert("Post criado com sucesso!"))
+        .then((response) => {
+            window.alert("Post criado com sucesso!")
+            setGetPost(null)
+            setCreatePost( {
+                text: "",
+                title: "",
+            })           
+        })
         .catch((error) => window.alert("Erro ao criar o post, tente novamente."))
     }
 
@@ -49,8 +57,7 @@ function FeedPage() {
         } 
     }, [getPost])
 
-    // console.log(getPost !== null && getPost[0])
-
+    
     return (
         <FeedContainer>
             <h1>Página de feed</h1>
