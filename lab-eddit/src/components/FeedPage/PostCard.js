@@ -3,10 +3,14 @@ import api from '../../services/api';
 import {useHistory} from 'react-router-dom';
 
 import { PostContainer } from './styles'
+import {
+    TiArrowDownThick, TiArrowDownOutline,
+    TiArrowUpOutline, TiArrowUpThick
+} from 'react-icons/ti';
 
 function PostCard(props) {
     const history = useHistory();
-
+    
     const onClickVote = (event) => {
         const currentVote = props.userVoteDirection
 
@@ -34,12 +38,21 @@ function PostCard(props) {
             
             <p>{props.text}</p>
             <div>
-                <button onClick={onClickVote} id={props.id} name="voteUp">Like</button>
+                <button onClick={onClickVote} id={props.id} name="voteUp"> Like
+                    {/* { comment.userVoteDirection === 1 ? <TiArrowUpThick/> : <TiArrowUpOutline/> } */}
+                </button>
+
                 <p>{props.votesCount}</p>
-                <button onClick={onClickVote} id={props.id} name="voteDown">Dislike</button>
-                <p>comentários {props.commentsCount}</p>
+
+                <button onClick={onClickVote} id={props.id} name="voteDown"> Dislike
+                    {/* { comment.userVoteDirection === -1 ? <TiArrowDownThick/> : <TiArrowDownOutline/> } */}
+                </button>
+
+                <p>{props.commentsCount} comentários</p>
             </div>
         </PostContainer>
+
+
     )}
   export default PostCard;
   
