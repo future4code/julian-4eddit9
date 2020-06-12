@@ -37,8 +37,14 @@ export const ContentActionBar = styled.div`
     flex-direction: row;
     justify-content: space-around;
 `; 
-export const IconButton = styled.i`
-
+export const IconButton = styled.button`
+    background: none;
+    text-decoration: none;
+    border: none;
+    padding: none;
+    margin: none;
+    font-size: small;
+    cursor: pointer; 
 `;
 export const ContentCounter = styled.span`
 
@@ -57,7 +63,14 @@ export const CommentInput = styled.textarea`
     overflow: auto;
 `;
 export const SendCommentButton = styled.button`
-    
+    background: none;
+    text-decoration: none;
+    border: none;
+    padding: none;
+    margin: none;
+    font-size: small;
+    cursor: pointer;
+    text-transform: uppercase;
 `;
 export const CommentsPanel = styled.main`
     margin: 16px 0 0 18px;

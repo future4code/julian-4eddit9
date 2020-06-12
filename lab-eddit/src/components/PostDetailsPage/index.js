@@ -26,24 +26,62 @@ const PostDetailsPage=()=>{
     
     const handleInputChange =(e)=>{
         setCommentText(e.target.value)
+        
     };
-    const handleSendComment=(e)=>{
+    const handleSendComment=async(e)=>{
         e.preventDefault();
-        console.log(commentText)
-    };
-    const handleSendVote=async(userDirection)=>{
         try{
-            const response = await axios
+            await axios
+            .post(
+                `${baseUrl}/posts/${postDetails.id}/comment`,
+                {text: commentText},
+                {headers:{Authorization:userToken}},
+            );
+            setPostDetails(null);
+            setCommentText('');
+        }catch(e){
+            window.alert('Não foi possível registrar seu comentário...')
+        }
+    };
+    const handleSendPostVote=async(userDirection)=>{
+        try{
+            await axios
             .put(
                 `${baseUrl}/posts/${postDetails.id}/vote`,
                 {direction: userDirection},
                 {headers:{Authorization:userToken}},
-            )
-            setPostDetails(null)
-            console.log(response)
+            );
+            setPostDetails(null);
         }catch(e){
-            window.alert('Não foi possível registrar seu voto...')
+            window.alert('Não foi possível registrar seu voto no post...');
         }
+    };
+    const handleSendCommentVote=async(e)=>{
+        const commentId = e.target.id;
+        const votedComment = postDetails.comments.filter(
+            comment=> (comment.id === e.target.id)
+        );
+        const voteDirection =()=>{
+            if(e.target.name === 'vote-up'){
+                const vote = votedComment[0].userVoteDirection === 1 ? 0 : 1
+                return vote
+            }
+            if(e.target.name === 'vote-down'){
+                const vote = votedComment[0].userVoteDirection === -1 ? 0 : -1
+                return vote
+            }
+        };                   
+        try{
+            await axios
+            .put(
+                `${baseUrl}/posts/${postDetails.id}/comment/${commentId}/vote`,
+                {direction: voteDirection()},
+                {headers:{Authorization:userToken}},
+            );
+            setPostDetails(null);
+        }catch(e){
+            window.alert('Não foi possível registrar seu voto no comentário...');
+        };
     };
     useEffect(()=>{
         if(postDetails === null){
@@ -54,7 +92,6 @@ const PostDetailsPage=()=>{
         }
     },[postDetails]);
 
-    //console.log(postDetails)
     return(
         <PostDetailsContainer>
             <h1>Detalhes do post</h1>
@@ -73,7 +110,7 @@ const PostDetailsPage=()=>{
                                 const userDirection = 
                                 postDetails!== null && postDetails.userVoteDirection === 1 ?
                                 0 : 1
-                                handleSendVote(userDirection)
+                                handleSendPostVote(userDirection)
                             }
                         }
                         >
@@ -86,12 +123,13 @@ const PostDetailsPage=()=>{
                         <ContentCounter>
                             {postDetails !== null ? postDetails.votesCount:''}
                         </ContentCounter>
-                        <IconButton onClick={
+                        <IconButton 
+                        onClick={
                             ()=>{
                                 const userDirection = 
                                 postDetails!== null && postDetails.userVoteDirection === -1 ?
                                 0 : -1
-                                handleSendVote(userDirection)
+                                handleSendPostVote(userDirection)
                             }
                         }
                         >
@@ -122,25 +160,41 @@ const PostDetailsPage=()=>{
                 />
                 <SendCommentButton>Enviar</SendCommentButton>
             </SendCommentCard>
+            
+            <h3>Comentários</h3>
 
             <CommentsPanel>
                 {
                 postDetails !== null && 
                     postDetails.comments.map(comment=>
                         (
-                            <CommentCard>
+                            <CommentCard key={comment.id}>
                                 <ContentTitle>{comment.username}</ContentTitle>
                                 <ContentText>
                                     {comment.text}
                                 </ContentText>
                                 <ContentActionBar>
                                     <>
-                                        <IconButton>
-                                            <TiArrowUpOutline/>
+                                        <IconButton
+                                        name='vote-up'
+                                        id={comment.id} 
+                                        onClick={handleSendCommentVote}
+                                        >
+                                            {
+                                            comment.userVoteDirection === 1 ?
+                                            <TiArrowUpThick/>:<TiArrowUpOutline/>
+                                            }
                                         </IconButton>
                                         <ContentCounter>{comment.votesCount}</ContentCounter>
-                                        <IconButton>
-                                            <TiArrowDownOutline/>
+                                        <IconButton
+                                        name='vote-down'
+                                        id={comment.id}
+                                        onClick={handleSendCommentVote}
+                                        >
+                                            {
+                                            comment.userVoteDirection === -1 ?
+                                            <TiArrowDownThick/>:<TiArrowDownOutline/>
+                                            }
                                         </IconButton>
                                     </>
                                     <>
