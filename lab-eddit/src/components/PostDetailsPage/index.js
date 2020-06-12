@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {useParams, useHistory} from 'react-router-dom'
+
 
 import {
     PostDetailsContainer, ContentCard, ContentText,
@@ -16,9 +18,11 @@ import {
 const baseUrl = 'https://us-central1-labenu-apis.cloudfunctions.net/labEddit';
 
 const PostDetailsPage=()=>{
+    const {postId} = useParams();
 
-    const postId = "QUEEf0KWjsVmS6w7xD7Y"
-    const userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNoUEVCeWZEOXBaOHpTYWpkR3lCIiwidXNlcm5hbWUiOiJIZW5kcml4IiwiZW1haWwiOiJoZW5kcml4QGppbW15LmNvbSIsImlhdCI6MTU5MTgyMzM4NH0.ctoXygEyO83nM00mePdwt_q8E7_C1yqHcdrXuGvXT6Y"
+    const history = useHistory();
+    
+    const userToken = JSON.parse(localStorage.getItem("userInfos")).token
 
     const [postDetails, setPostDetails] = useState(null);
 
@@ -95,6 +99,7 @@ const PostDetailsPage=()=>{
     return(
         <PostDetailsContainer>
             <h1>Detalhes do post</h1>
+            <button onClick={()=>{history.goBack()}}>Voltar para Feed</button>
             <ContentCard>
                 <ContentTitle>
                     {postDetails !== null ? postDetails.username:''}
